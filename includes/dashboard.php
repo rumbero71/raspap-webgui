@@ -10,6 +10,7 @@ function DisplayDashboard(){
 
   exec( 'ifconfig wlan0', $return );
   exec( 'iwconfig wlan0', $return );
+  exec( '/opt/scripts/checkcaptive.sh', $return );
 
   $strWlan0 = implode( " ", $return );
   $strWlan0 = preg_replace( '/\s\s+/', ' ', $strWlan0 );
@@ -43,6 +44,10 @@ function DisplayDashboard(){
   $strSignalLevel = $result[1];
   preg_match('/Frequency:(\d+.\d+ GHz)/i',$strWlan0,$result);
   $strFrequency = $result[1];
+  preg_match( '/HTTP response:([0-9]+)/i',$strWlan0,$result );
+  $strCaptive = $result[1];
+
+
 
   if(strpos( $strWlan0, "UP" ) !== false && strpos( $strWlan0, "RUNNING" ) !== false ) {
     $status->addMessage('Interface is up', 'success');
@@ -113,6 +118,27 @@ function DisplayDashboard(){
         </div><!-- /.panel-body -->
         </div><!-- /.panel-default -->
                         </div><!-- /.col-md-6 -->
+        <div class="col-md-6">
+                    <div class="panel panel-default">
+              <div class="panel-body captive">
+                            <h4>Captive Portal</h4>
+                <?php switch ( $strCaptive ) {
+			case "204":
+				echo '<a type="button" value="OK" class="btn btn-success" />OK</a/>';
+				break;
+			case "000":
+				echo '<a type="button" value="DISCONNECTED" class="btn btn-danger" />DISCONNECTED</a/>';
+				break;
+			default:
+				echo '<a type="button" href="https://www.google.de" value="Authenticate" target="_blank" class="btn btn-warning"/>Authenticate</a/>';
+				break;
+		} ?>
+
+				
+		
+        </div><!-- /.panel-body -->
+        </div><!-- /.panel-default -->
+                        </div><!-- /.col-md-6 -->
       </div><!-- /.row -->
 
                   <div class="col-lg-12">
@@ -124,7 +150,7 @@ function DisplayDashboard(){
                 echo '<input type="submit" class="btn btn-warning" value="Stop wlan0" name="ifdown_wlan0" />';
               }
               ?>
-              <input type="button" class="btn btn-outline btn-primary" value="Refresh" onclick="document.location.reload(true)" />
+	      <input type="button" class="btn btn-outline btn-primary" value="Refresh" onclick="document.location.reload(true)" />
               </form>
             </div>
               </div>
