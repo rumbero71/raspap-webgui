@@ -1,1 +1,11 @@
-todo
+Why?
+For a secure gateway proyect I found it quite convenient to have captive portal detection with the ability to easily 
+sign in directly from the raspap-gui.
+
+How does it work?
+The response of a google page which is specially there for this purpose is checked. The website generates nothing but a 
+HTTP204. If that code is received all is well. If not, we are in a walled garden. An authenticate button appears in the UI,
+opening google on click which of course leads to the actual authentication page.
+
+I frikkin hate google, can't I use a different page ?
+Of course. Any page generating a 204 will do. Just modify checkcaptive.sh and you are good to go.
