@@ -9,3 +9,6 @@ opening google on click which of course leads to the actual authentication page.
 
 I frikkin hate google, can't I use a different page ?
 Of course. Any page generating a 204 will do. Just modify checkcaptive.sh and you are good to go.
+
+Where do I put that script ?
+Copy checkcaptive.sh to /opt/scripts. If you would like a different location, modify dashboard.php
