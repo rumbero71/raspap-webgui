@@ -11,6 +11,7 @@ function DisplayDashboard(){
   exec( 'ifconfig wlan0', $return );
   exec( 'iwconfig wlan0', $return );
   exec( '/opt/scripts/checkcaptive.sh', $return );
+  exec( '/opt/scripts/torcheck.sh', $return );
 
   $strWlan0 = implode( " ", $return );
   $strWlan0 = preg_replace( '/\s\s+/', ' ', $strWlan0 );
@@ -46,7 +47,11 @@ function DisplayDashboard(){
   $strFrequency = $result[1];
   preg_match( '/HTTP response:([0-9]+)/i',$strWlan0,$result );
   $strCaptive = $result[1];
-
+  preg_match( '/torcheck:([a-zA-Z0-9]+)/i',$strWlan0,$result );
+  $strTorEnabled = $result[1];
+  preg_match( '/torcheck:([a-zA-Z0-9:]+)/i',$strWlan0,$result );
+  $s = explode(":",$result[1]);
+  $strTorCircuit = $s[1];
 
 
   if(strpos( $strWlan0, "UP" ) !== false && strpos( $strWlan0, "RUNNING" ) !== false ) {
@@ -133,12 +138,35 @@ function DisplayDashboard(){
 				echo '<a type="button" href="https://www.google.de" value="Authenticate" target="_blank" class="btn btn-warning"/>Authenticate</a/>';
 				break;
 		} ?>
-
-				
 		
         </div><!-- /.panel-body -->
         </div><!-- /.panel-default -->
                         </div><!-- /.col-md-6 -->
+       <div class="col-md-6">
+                    <div class="panel panel-default">
+              <div class="panel-body tor">
+                            <h4>TOR</h4>
+                <?php switch ( $strTorEnabled ) {
+			case "disabled":
+				echo '<a type="button" value="DISABLED" class="btn btn-danger" />DISABLED</a/>';
+				break;
+			case "enabled":
+				switch ( $strTorCircuit ) {
+					case "circuit":
+						echo '<a type="button" value="OK" class="btn btn-success" />OK</a/>';
+						break;
+					case "nocircuit":
+						echo '<a type="button" value="NOCIRCUIT" target="_blank" class="btn btn-warning"/>No Circuit</a/>';
+						break;
+				}
+				break;
+		} ?>
+
+        </div><!-- /.panel-body -->
+        </div><!-- /.panel-default -->
+                        </div><!-- /.col-md-6 -->
+
+
       </div><!-- /.row -->
 
                   <div class="col-lg-12">
